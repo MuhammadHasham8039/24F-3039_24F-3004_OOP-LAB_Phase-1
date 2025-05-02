@@ -49,7 +49,8 @@ public:
 
     Population() {}
     Population(int initialPopulation, int employmentRate, int wealth)
-        : currentPopulation(initialPopulation), employmentRate(employmentRate) {}
+        : currentPopulation(initialPopulation), employmentRate(employmentRate) {
+    }
 
     // replicating the effects of resources on population
     void UpdatePopulation() {
@@ -88,7 +89,8 @@ public:
 
     Military() : message("") {}
     Military(int soldiersCount, int morale, int pay, int corruption, int trainCoins, int training)
-        :training(training), trainCoins(trainCoins), soldiers(soldiersCount), morale(morale), pay(pay), corruption(corruption) {}
+        :training(training), trainCoins(trainCoins), soldiers(soldiersCount), morale(morale), pay(pay), corruption(corruption) {
+    }
 
     void displayinventory()
     {
@@ -197,9 +199,9 @@ public:
     int age;
     string message;
     LeadershipStyle style;
-    string name; 
+    string name;
     int term;
-    float popularityfactor; 
+    float popularityfactor;
     EventLog eventleadership;
     int x = 1050;
     int y = 600;
@@ -212,7 +214,7 @@ public:
 
     // add to castle 
     void DisplayLeadership() {
-      
+
         string styleText;
         switch (style) {
         case AUTHORITARIAN: styleText = "Authoritarian"; break;
@@ -232,7 +234,7 @@ public:
         switch (style) {
         case AUTHORITARIAN:
             policyText = "Authoritarian Policies \n military strength \n noble support \n higher taxes \n peasents unrest ";
-           
+
             break;
         case DEMOCRATIC:
             policyText = "DEMOCRATIC Policies \n Reduced Civil Unrest \n Popular Support \n Lower Tax Revenue";
@@ -251,12 +253,12 @@ public:
     bool checkElection() {
         if (approvalRating < 30) {
             message = "The leadership is weak. An election will take place!";
-            isAlive = false; 
-            return true; 
+            isAlive = false;
+            return true;
         }
         else {
             message = "The leadership has the majority";
-            return false; 
+            return false;
         }
         if (!message.empty()) {
             addEvent(message.c_str());
@@ -273,10 +275,10 @@ public:
     }
 
     void AgeLeader() {
-        term++; 
+        term++;
         // after 60 the popularity of king will start to fall
         if (age > 60) {
-            popularityfactor *= 0.90f; 
+            popularityfactor *= 0.90f;
         }
     }
 
@@ -304,7 +306,7 @@ public:
             economy.corruption *= 0.5f;
             economy.inflation *= 0.6f;
             merchants.unrest -= 3.0f;
-            economy.gold *= 1.5f; 
+            economy.gold *= 1.5f;
             break;
         }
         // managing the out of range 
@@ -349,9 +351,9 @@ public:
         term = 0;
 
         style = (rand() % 2) ? DEMOCRATIC : ECONOMIC;
-          
 
-        const char* firstNames[] = { "mulla jutt", "chahcu", "chachi" };
+
+        const char* firstNames[] = { "mola jutt", "chahcu", "nigga" };
         name = string(firstNames[rand() % 3]);
 
         switch (style) {
@@ -369,14 +371,14 @@ public:
 
 struct Building {
     string name;
-    Rectangle rect;  
+    Rectangle rect;
     Color color;
 
 };
 
 class Kingdom {
 public:
-    int day;            
+    int day;
     SocialClass peasants;
     SocialClass merchants;
     SocialClass nobles;
@@ -397,7 +399,7 @@ public:
         if (leader.age > 60) {
             int death = rand() % 2;
 
-            if (death==1) {
+            if (death == 1) {
                 leader.isAlive = false;
                 char deathMsg[128];
                 string message = string(leader.title) + " " + leader.name + " has died of old age at " + to_string(leader.age) + ".";
@@ -406,7 +408,7 @@ public:
             }
         }
         // death in the battles field is dependent on the morale of the army
-        if (army.morale < 20.0f ) {
+        if (army.morale < 20.0f) {
             leader.DeathInBattle();
             if (!leader.isAlive) {
                 addEvent("leader has died in battle");
@@ -447,26 +449,26 @@ public:
     Kingdom() {
         day = 0;
         peasants.name = "Peasants";
-        peasants.population = 100;  
+        peasants.population = 100;
         peasants.unrest = 0.0;
         merchants.name = "Merchants";
-        merchants.population = 30;  
+        merchants.population = 30;
         merchants.unrest = 0.0;
         nobles.name = "Nobles";
-        nobles.population = 10;     
+        nobles.population = 10;
         nobles.unrest = 0.0;
-        leader.title = "King";       
-        leader.age = 40;             
-        army.soldiers = 20;     
-        army.training = 50.0;    
-        army.morale = 80.0;       
-        army.corruption = 0.0;    
-        economy.gold = 500.0;       
+        leader.title = "King";
+        leader.age = 40;
+        army.soldiers = 20;
+        army.training = 50.0;
+        army.morale = 80.0;
+        army.corruption = 0.0;
+        economy.gold = 500.0;
         economy.debt = 0.0;
-        economy.taxRate = 1.0;      
+        economy.taxRate = 1.0;
         economy.inflation = 0.0;
         economy.interestRate = 0.05;
-        economy.corruption = 0.1;   
+        economy.corruption = 0.1;
         resources.food = 200;
         resources.wood = 150;
         resources.stone = 50;
@@ -480,22 +482,22 @@ public:
     }
 
     void updateday() {
-        day += 1; 
+        day += 1;
 
         int p = peasants.population;
         int foodProduced = (int)(p * 1.0f);
         int woodProduced = (int)(p * 1.0f);
         int stoneProduced = (int)(p * 1.0f);
         int ironProduced = (int)(p * 1.0f);
-      
+
         resources.food += foodProduced;
         resources.wood += woodProduced;
         resources.stone += stoneProduced;
         resources.iron += ironProduced;
 
         int totalPopulation = peasants.population + merchants.population + nobles.population;
-        int foodNeeded = totalPopulation;         
-        foodNeeded += army.soldiers;               
+        int foodNeeded = totalPopulation;
+        foodNeeded += army.soldiers;
         if (resources.food < foodNeeded) {
             int deficit = foodNeeded - resources.food;
             int deaths = deficit;
@@ -528,7 +530,7 @@ public:
             resources.food -= foodNeeded;
         }
 
-        int woodNeeded = (int)(totalPopulation * 0.1); 
+        int woodNeeded = (int)(totalPopulation * 0.1);
         if (resources.wood < woodNeeded) {
             resources.wood = 0;
             peasants.unrest += 5.0;
@@ -544,7 +546,7 @@ public:
         }
 
         if (army.soldiers > 0) {
-            int ironNeeded = (int)(army.soldiers * 0.1); 
+            int ironNeeded = (int)(army.soldiers * 0.1);
             if (resources.iron < ironNeeded) {
                 army.morale -= 5.0;
                 if (army.morale < 0.0) army.morale = 0.0;
@@ -556,17 +558,17 @@ public:
             }
         }
 
-        
+
         float baseTax = peasants.population * 1.0f + merchants.population * 3.0f + nobles.population * 0.0f;
         float grossTaxIncome = baseTax * economy.taxRate;
         float netTaxIncome = grossTaxIncome * (1.0f - economy.corruption);
         economy.gold += netTaxIncome;
-        float economySize = (float)totalPopulation + resources.food * 0.5; 
+        float economySize = (float)totalPopulation + resources.food * 0.5;
         if (economy.gold > economySize * 5.0f) {
             economy.inflation += 0.02f;
-            if (economy.inflation > 1.0f) economy.inflation = 1.0f; 
+            if (economy.inflation > 1.0f) economy.inflation = 1.0f;
         }
-        float salaryCost = army.soldiers * 1.0f;  
+        float salaryCost = army.soldiers * 1.0f;
         if (economy.gold < salaryCost) {
             float shortfall = salaryCost - economy.gold;
             economy.gold = 0;
@@ -583,7 +585,7 @@ public:
             if (army.morale > 100.0f) army.morale = 100.0f;
         }
 
-        army.training += 2.0f; 
+        army.training += 2.0f;
         if (army.training > 100.0f) army.training = 100.0f;
         if (army.morale > 50.0f) {
             army.morale -= 0.5f;
@@ -594,8 +596,8 @@ public:
             if (army.morale > 50.0f) army.morale = 50.0f;
         }
 
-        float birthRate = 0.02f;  
-        float deathRate = 0.01f;   
+        float birthRate = 0.02f;
+        float deathRate = 0.01f;
         int peasantsBirths = (int)(peasants.population * birthRate);
         int merchantsBirths = (int)(merchants.population * birthRate);
         int noblesBirths = (int)(nobles.population * birthRate);
@@ -626,7 +628,7 @@ public:
         }
 
 
-      
+
         int random100 = rand() % 100;
         int random100b = rand() % 100;
         bool eventOccurred = false;
@@ -638,14 +640,14 @@ public:
             eventOccurred = true;
             bool victory = (army.training > 70 && army.morale > 50 && army.soldiers > 10) && (rand() % 100 < 50);
             int initialSoldiers = army.soldiers;
-            int soldierLoss = victory ? (army.soldiers * 10 / 100) : (army.soldiers * 30 / 100); 
-            if (soldierLoss < 1 && army.soldiers > 0) soldierLoss = 1; 
+            int soldierLoss = victory ? (army.soldiers * 10 / 100) : (army.soldiers * 30 / 100);
+            if (soldierLoss < 1 && army.soldiers > 0) soldierLoss = 1;
             army.soldiers -= soldierLoss;
             if (army.soldiers < 0) army.soldiers = 0;
             int peasantLoss = victory ? (peasants.population * 2 / 100) : (peasants.population * 5 / 100);
             peasants.population -= peasantLoss;
             if (peasants.population < 0) peasants.population = 0;
-            int foodUse = 20; 
+            int foodUse = 20;
             if (resources.food < foodUse) foodUse = resources.food;
             resources.food -= foodUse;
             int woodUse = 15;
@@ -677,7 +679,7 @@ public:
             if (economy.inflation > 1.0f) economy.inflation = 1.0f;
             peasants.unrest += 5.0f;
             if (peasants.unrest > 100.0f) peasants.unrest = 100.0f;
-            merchants.unrest += 3.0f; 
+            merchants.unrest += 3.0f;
             if (merchants.unrest > 100.0f) merchants.unrest = 100.0f;
             char warMsg[128];
             string message;
@@ -697,14 +699,14 @@ public:
 
         handleleadership();
     }
-    
+
 
 
 
 
     // AI CONTROL DECISON MAKING 
     // the system is designed to make decisons on the basis of stats 
-      
+
     void ManageResources() {
         if (resources.food < (peasants.population + merchants.population + nobles.population)) {
             // if the food production is low we will allocate more population to the production
@@ -754,7 +756,7 @@ public:
         }
 
         if (army.morale < 50 && economy.gold >= army.soldiers * 1.0f) {
-         // training the soldiers require gold 
+            // training the soldiers require gold 
             army.morale += 10;
             economy.gold -= army.soldiers * 1;
             addEvent("Training soldiers to boost morale.");
@@ -762,7 +764,7 @@ public:
 
         if (army.soldiers > 50 && economy.gold > 200) {
             // warchance more than 50 result in war
-            if (warChance>50) {
+            if (warChance > 50) {
                 // the victory will be based on the morale of the army
                 bool victory = army.morale > 50;
 
@@ -1141,14 +1143,14 @@ public:
     }
     void pixelCheif() {
         //if (kingSkin = DEFAULT) {
-            int chiefx = chiefPosition.x;
-            int chiefy = chiefPosition.y;
-            Image chiefimage = LoadImage("kingc2.PNG");
-            Texture2D chieftex = LoadTextureFromImage(chiefimage); // Convert image to texture
-            UnloadImage(chiefimage);  // We no longer need the image after converting it to a texture
-            DrawTexture(chieftex, chiefx, chiefy, WHITE);
+        int chiefx = chiefPosition.x;
+        int chiefy = chiefPosition.y;
+        Image chiefimage = LoadImage("kingc2.PNG");
+        Texture2D chieftex = LoadTextureFromImage(chiefimage); // Convert image to texture
+        UnloadImage(chiefimage);  // We no longer need the image after converting it to a texture
+        DrawTexture(chieftex, chiefx, chiefy, WHITE);
         /*}*/
-        
+
         //if (kingSkin = SKIN1) {
         //    int chiefx = chiefPosition.x;
         //    int chiefy = chiefPosition.y;
@@ -1312,12 +1314,11 @@ public:
             if (kingdom.economy.gold >= military.soldiers)
             {
                 kingdom.economy.gold -= military.soldiers;
-                
-                cout << " Executed: Soldiers salaries have been paid.\n";
+                kingdom.events.add("Executed: Soldiers salaries have been paid.");
             }
             else
             {
-                cout << " Not enough gold to pay salaries.\n";
+                kingdom.events.add(" Not enough gold to pay salaries.");
                 military.soldiers -= military.soldiers - kingdom.economy.gold;
                 kingdom.peasants.population += military.soldiers - kingdom.economy.gold;
                 kingdom.economy.gold -= military.soldiers - kingdom.economy.gold;
@@ -1328,12 +1329,12 @@ public:
         else if (IsKeyPressed(KEY_TWO))
         {
             leadership.DisplayLeadership();
-           
+
         }
         else if (IsKeyPressed(KEY_THREE))
         {
             leadership.DisplayLeadershipPolicies();
-          
+
         }
 
 
@@ -1353,11 +1354,11 @@ public:
             if (kingdom.economy.gold >= military.soldiers)
             {
                 kingdom.economy.gold -= military.soldiers;
-                cout << " Executed: Soldiers training successful.\n";
+                kingdom.events.add(" Executed: Soldiers training successful.");
             }
             else
             {
-                cout << " Not enough gold to train the soldiers.\n";
+                kingdom.events.add(" Not enough gold to train the soldiers.");
                 military.morale -= 5;
             }
         }
@@ -1374,10 +1375,11 @@ public:
             if (kingdom.warChance > 50) {
                 recruits = kingdom.peasants.population / 5;
                 military.soldiers += recruits;
-                cout << " Executed: " << recruits << " soldiers added to Military.\n";
+                kingdom.events.add(" Executed: soldiers added to Military.");
+               // cout << " Executed: " << recruits << " soldiers added to Military.\n";
             }
             else {
-                cout << " Not enough population to recruit soldiers.\n";
+                kingdom.events.add("Not enough population to recruit soldiers.");
             }
         }
         else if (IsKeyPressed(KEY_FOUR))
@@ -1394,16 +1396,16 @@ public:
         DrawText("1. Forge Swords (10 iron / 5 swords)", 20, 555, 20, BLACK);
         DrawText("2. Forge Arrows (10 wood / 5 arrows)", 20, 580, 20, BLACK);
         DrawText("3. Forge Armours (10 iron /  2 Armours)", 20, 605, 20, BLACK);
-  
+
         if (IsKeyPressed(KEY_ONE))
         {
             if (kingdom.resources.iron >= 10)
             {
                 kingdom.resources.iron -= 10;
                 military.swords += 5;
-                cout << "  Executed: Swords forged successfully.\n";
+                kingdom.events.add("Executed: Swords forged successfully.");
             }
-           
+
         }
         else if (IsKeyPressed(KEY_TWO))
         {
@@ -1411,12 +1413,11 @@ public:
             {
                 kingdom.resources.wood -= 10;
                 military.arrows += 5;
-                cout << " Executed: Arrows forged successfully.\n";
+                kingdom.events.add(" Executed: Arrows forged successfully.");
             }
             else
             {
-                cout << "  Not enough wood to forge Arrows.\n";
-
+                kingdom.events.add(" Not enough wood to forge Arrows.");
             }
         }
         else if (IsKeyPressed(KEY_THREE))
@@ -1425,15 +1426,14 @@ public:
             {
                 kingdom.resources.iron -= 10;
                 military.armours = 2;
-                cout << " Executed: armour forged successfully.\n";
+                kingdom.events.add(" Executed: armour forged successfully.");
             }
             else
             {
-                cout << " Not enough iron to forge armour.\n";
-
+                kingdom.events.add("Not enough iron to forge armour.");
             }
         }
-   
+
 
     }
 
@@ -1456,18 +1456,18 @@ public:
             }
             else
             {
-                cout << " No need for Noble Meeting.\n";
-
+                kingdom.events.add("No need for Noble Meeting.");
             }
         }
         else if (IsKeyPressed(KEY_TWO))
         {
             if (kingdom.warChance > 50)
             {
+                kingdom.events.add("Executed: Bought 10 food for 10 gold");
                 cout << "War Negotiations under way \n";
                 if (rand() % 4 == 4)
                 {
-                    cout << "Negotiations unsuccessful \n";
+                    kingdom.events.add("Negotiations unsuccessful!");
                     leadership.approvalRating -= 10;
                     kingdom.nobles.unrest += 10;
                     kingdom.peasants.unrest += 10;
@@ -1475,17 +1475,15 @@ public:
                 }
                 else
                 {
-                    cout << "Negotiations successful \n";
+                    kingdom.events.add("Negotiations successful");
                     leadership.approvalRating += 10;
                     kingdom.nobles.unrest -= 10;
                     kingdom.peasants.unrest -= 10;
                     kingdom.merchants.unrest -= 10;
                 }
             }
-            else{
-            
-                cout << "  No War Negotiations in progress \n";
-            
+            else {
+                kingdom.events.add(" No War Negotiations in progress");
             }
         }
         else if (IsKeyPressed(KEY_THREE))
@@ -1502,9 +1500,9 @@ public:
     void marketmenue() {
         // Draw Market Menu
         DrawText("Market Menu", 20, 530, 20, RED);
-        DrawText("1. Buy Food (10 gold / 10 food)", 20, 555, 20, RED);
-        DrawText("2. Trade Wood for Food (10 wood / 10 food)", 20, 580, 20, RED);
-        DrawText("3. Trade Iron for Gold ", 20, 605, 20, RED);
+        DrawText("1. Buy Food (10 gold / 10 food)", 20, 555, 20, BLACK);
+        DrawText("2. Trade Wood for Food (10 wood / 10 food)", 20, 580, 20, BLACK);
+        DrawText("3. Trade Iron for Gold ", 20, 605, 20, BLACK);
 
         if (IsKeyPressed(KEY_ONE)) {
             if (kingdom.economy.gold >= 10) {
@@ -1523,14 +1521,14 @@ public:
             if (kingdom.resources.wood >= trade_wood) {
                 int food_gained = 10;
                 if (kingdom.resources.food < kingdom.resources.wood) {
-                    food_gained = 20;  
+                    food_gained = 20;
                 }
                 else if (kingdom.resources.wood < kingdom.resources.food) {
-                    food_gained = 5;   
+                    food_gained = 5;
                 }
                 kingdom.resources.wood -= trade_wood;
                 kingdom.resources.food += food_gained;
-                messagemenue = "  Executed: Traded " + to_string(trade_wood)+ " wood for "+to_string( food_gained )+ " food";
+                messagemenue = "  Executed: Traded " + to_string(trade_wood) + " wood for " + to_string(food_gained) + " food";
                 kingdom.events.add(messagemenue.c_str());
             }
             else {
@@ -1590,10 +1588,10 @@ public:
             Color statColor = GOLD;
             Color goodColor = DARKGREEN;
 
-          // display the day on the middle of the screen
+            // display the day on the middle of the screen
 
-          // using _itoa to convert integer into string
-          // add then passing the string to the draw text function
+            // using _itoa to convert integer into string
+            // add then passing the string to the draw text function
 
             char msg[128];
 
@@ -1721,7 +1719,7 @@ public:
             DrawText("PRESS SPACE FOR NEXT DAY", 500, 670, 20, BLACK);
 
 
-      
+
 
             EndDrawing();
         }
