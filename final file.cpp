@@ -4,9 +4,13 @@
 #include <cstdlib>
 #include <ctime>
 #include <cstring>  
+#include<vector>
+class Kingdom;
+class MessageBoard;
 
 using namespace std;
-class Resources {
+class Resources 
+{
 public:
     int food = 1000;
     int wood;
@@ -15,7 +19,8 @@ public:
 
     Resources() : food(0), wood(0), stone(0), iron(0) {}
 };
-struct Economy {
+struct Economy 
+{
     float gold;
     float debt;         // when the gold gets less than zero
     float taxRate;
@@ -25,7 +30,8 @@ struct Economy {
 
     Economy() : gold(0.0f), debt(0.0f), taxRate(1.0f), inflation(0.0f), interestRate(0.05f), corruption(0.0f) {}
 };
-enum KingSkin {
+enum KingSkin 
+{
     DEFAULT,
     SKIN1,
     SKIN2
@@ -33,8 +39,9 @@ enum KingSkin {
 
 KingSkin kingSkin = DEFAULT;
 
-// this will devide the population into segments like peasents merchants and nobels
-struct SocialClass {
+// this will devide the population into peasents merchants and nobels
+struct SocialClass 
+{
     const char* name;
     int population;
     float unrest;
@@ -42,27 +49,32 @@ struct SocialClass {
     SocialClass() : name(""), population(0), unrest(0.0f) {}
 };
 
-class Population :public Resources {
+class Population :public Resources 
+{
 public:
     int currentPopulation;
     int employmentRate;
 
     Population() {}
     Population(int initialPopulation, int employmentRate, int wealth)
-        : currentPopulation(initialPopulation), employmentRate(employmentRate) {
+        : currentPopulation(initialPopulation), employmentRate(employmentRate) 
+    {
     }
 
     // replicating the effects of resources on population
-    void UpdatePopulation() {
+    void UpdatePopulation() 
+    {
         if (food < 50) {
             currentPopulation -= 5;
         }
-        else if (employmentRate > 80) {
+        else if (employmentRate > 80) 
+        {
             currentPopulation += 10;
         }
     }
 
-    void DisplayPopulation(int x, int y) {
+    void DisplayPopulation(int x, int y) 
+    {
         string populationData = "Population: " + to_string(currentPopulation) +
             "\nFood Supply: " + to_string(food) +
             "\nEmployment Rate: " + to_string(employmentRate);
@@ -73,11 +85,12 @@ public:
 
 };
 
-class Military : public Resources {
+class Military : public Resources 
+{
 public:
     int soldiers;
     int morale;
-    float training; // percentage of training skills
+    float training;
     int pay;
     int swords;
     int arrows;
@@ -89,8 +102,7 @@ public:
 
     Military() : message("") {}
     Military(int soldiersCount, int morale, int pay, int corruption, int trainCoins, int training)
-        :training(training), trainCoins(trainCoins), soldiers(soldiersCount), morale(morale), pay(pay), corruption(corruption) {
-    }
+        :training(training), trainCoins(trainCoins), soldiers(soldiersCount), morale(morale), pay(pay), corruption(corruption) {}
 
     void displayinventory()
     {
@@ -101,7 +113,8 @@ public:
 
     }
 
-    void Recruit(int population, int x, int y) {
+    void Recruit(int population, int x, int y) 
+    {
         // recruit 10 percent of the population on call
         int newSoldiers = population / 10;
         soldiers += newSoldiers;
@@ -111,42 +124,52 @@ public:
         }
     }
 
-    void TrainSoldiers(int number, int x, int y) {
-        if (trainCoins > (number * costToTrain)) {
+    void TrainSoldiers(int number, int x, int y) 
+    {
+        if (trainCoins > (number * costToTrain)) 
+        {
             morale += 10;
             training += 10;
             pay += 10;
             trainCoins -= (number * costToTrain);
             message = "Training..Morale increased";
         }
-        else {
+        else 
+        {
             message = "Not enough resources ";
         }
-        if (!message.empty()) {
+        if (!message.empty()) 
+        {
             DrawText(message.c_str(), x, y, 20, RED);
         }
     }
 
-    void UpdateMilitary() {
-        if (food < 50) {
+    void UpdateMilitary() 
+    {
+        if (food < 50) 
+        {
             morale -= 10;
         }
 
-        if (pay < 50) {
+        if (pay < 50) 
+        {
             morale -= 15;
         }
 
-        if (morale < 50) {
+        if (morale < 50) 
+        {
             soldiers -= 5;
         }
 
-        if (corruption > 50) {
+        if (corruption > 50) 
+        {
             morale -= 20;
             std::cout << "Corruption is high, morale is decreasing" << endl;
         }
     }
 
-    void DisplayMilitary(int x, int y) {
+    void DisplayMilitary(int x, int y) 
+    {
         string militaryData = "Soldiers: " + to_string(soldiers) +
             "\n morale: " + to_string(morale) + " %" +
             "\n pay: " + to_string(pay) +
@@ -156,34 +179,44 @@ public:
     }
 
 
-    void IncreaseCorruption() {
+    void IncreaseCorruption() 
+    {
         corruption += 5;  // Corruption increases over time
     }
 };
 
-enum LeadershipStyle {
+enum LeadershipStyle 
+{
     AUTHORITARIAN,
     DEMOCRATIC,
     ECONOMIC
 };
-struct EventLog {
+struct EventLog 
+{
     static const int MAX_EVENTS = 5;
     char messages[MAX_EVENTS][128];
     int count;
 
-    EventLog() : count(0) {
-        for (int i = 0; i < MAX_EVENTS; ++i) {
+    EventLog() : count(0) 
+    {
+        for (int i = 0; i < MAX_EVENTS; ++i) 
+        {
             messages[i][0] = '\0';
         }
     }
 
-    void add(const char* msg) {
-        if (count < MAX_EVENTS) {
+    void add(const char* msg) 
+    {
+        if (count < MAX_EVENTS) 
+        {
             strcpy_s(messages[count], sizeof(messages[count]), msg);
             count++;
         }
-        else {
-            for (int i = 1; i < MAX_EVENTS; ++i) {
+        else 
+        
+        {
+            for (int i = 1; i < MAX_EVENTS; ++i) 
+            {
                 strcpy_s(messages[i - 1], sizeof(messages[i - 1]), messages[i]);
             }
             strcpy_s(messages[MAX_EVENTS - 1], sizeof(messages[MAX_EVENTS - 1]), msg);
@@ -191,7 +224,8 @@ struct EventLog {
     }
 };
 
-class Leadership {
+class Leadership 
+{
 public:
     string title;
     int approvalRating;
@@ -206,32 +240,61 @@ public:
     int x = 1050;
     int y = 600;
 
-    Leadership() : isAlive(true), message(""), style(AUTHORITARIAN), term(0), popularityfactor(1.0f), name("King") {}
+    Leadership() : isAlive(true), message(""), style(AUTHORITARIAN), term(0), popularityfactor(1.0f), name("CHACHU"), title("KING") {}
 
-    void addEvent(const char* msg) {
+    void addEvent(const char* msg) 
+    {
         eventleadership.add(msg);
     }
 
-    // add to castle 
-    void DisplayLeadership() {
-
+    char* DisplayLeadership() 
+    {
         string styleText;
-        switch (style) {
-        case AUTHORITARIAN: styleText = "Authoritarian"; break;
-        case DEMOCRATIC: styleText = "DEMOCRATIC"; break;
-        case ECONOMIC: styleText = "Economic"; break;
-        default: styleText = "Unknown"; break;
+        switch (style) 
+        {
+        case AUTHORITARIAN:
+            styleText = "Authoritarian";
+            break;
+        case DEMOCRATIC:
+            styleText = "DEMOCRATIC";
+            break;
+        case ECONOMIC:
+            styleText = "Economic";
+            break;
+        default:
+            styleText = "Unknown";
+            break;
         }
 
-        string leadershipData = title + " " + name + " (" + styleText + ")" +
-            "\nLeadership Approval: " + to_string(approvalRating) + "%" +
-            "\nYears in Power: " + to_string(term);
-        DrawText(leadershipData.c_str(), x, y, 20, RED);
+        static char leadershipData[256];
+        int position = 0;
+
+        // Copy title
+        for (int i = 0; title[i] != '\0'; i++)
+            leadershipData[position++] = title[i];
+
+        // Add space
+        leadershipData[position++] = ' ';
+
+        // Copy name
+        for (int i = 0; name[i] != '\0'; i++)
+            leadershipData[position++] = name[i];
+
+        // Add space
+        leadershipData[position++] = ' ';
+
+        for (int i = 0; styleText[i] != '\0'; i++)
+            leadershipData[position++] = styleText[i];
+
+        leadershipData[position] = '\0';
+        return leadershipData;
     }
     // castle menue
-    void DisplayLeadershipPolicies() {
+    void DisplayLeadershipPolicies() 
+    {
         string policyText;
-        switch (style) {
+        switch (style) 
+        {
         case AUTHORITARIAN:
             policyText = "Authoritarian Policies \n military strength \n noble support \n higher taxes \n peasents unrest ";
 
@@ -250,42 +313,52 @@ public:
         DrawText(policyText.c_str(), x, y, 18, LIGHTGRAY);
     }
 
-    bool checkElection() {
-        if (approvalRating < 30) {
+    bool checkElection() 
+    {
+        if (approvalRating < 30) 
+        {
             message = "The leadership is weak. An election will take place!";
             isAlive = false;
             return true;
         }
-        else {
+        else 
+        {
             message = "The leadership has the majority";
             return false;
         }
-        if (!message.empty()) {
+        if (!message.empty()) 
+        {
             addEvent(message.c_str());
         }
     }
 
 
-    void DeathInBattle() {
-        if (isAlive && approvalRating < 10) {
+    void DeathInBattle() 
+    {
+        if (isAlive && approvalRating < 10) 
+        {
             message = "The leader has died in battle due to low morale";
             isAlive = false;
             addEvent(message.c_str());
         }
     }
 
-    void AgeLeader() {
+    void AgeLeader() 
+    {
         term++;
         // after 60 the popularity of king will start to fall
-        if (age > 60) {
+        if (age > 60) 
+        {
             popularityfactor *= 0.90f;
         }
     }
 
     // all the policies which were discussed earlier will be implemented as the leadership has taken over the kingdom
     void ImplementPolicy(Economy& economy, SocialClass& peasants, SocialClass& merchants,
-        SocialClass& nobles, Military& army, Resources& resources) {
-        switch (style) {
+        SocialClass& nobles, Military& army, Resources& resources) 
+    {
+        switch (style) 
+        {
         case AUTHORITARIAN:
             economy.taxRate *= 1.5f;
             peasants.unrest += 2.0f;
@@ -309,21 +382,21 @@ public:
             economy.gold *= 1.5f;
             break;
         }
-        // managing the out of range 
+        // managing minimum tax ratio
         if (economy.taxRate > 2.0f) economy.taxRate = 2.0f;
         if (economy.taxRate < 0.5f) economy.taxRate = 0.5f;
     }
 
 
-    // now after the king has died or has lost popularity the regime will change and there are few ways in which it can be done
+    // After the king has died or has lost popularity the regime will change
 
-    void TransitionPower() {
+    void TransitionPower(){
 
         style = static_cast<LeadershipStyle>(rand() % 3);
 
         const char* firstNames[] = { "mulla jutt", "chahcu", "chachi" };
         name = string(firstNames[rand() % 3]);
-        // after the new king is selcted the stats will be reset for the new regime
+        // Resetting stats after regime change
         isAlive = true;
         age = 30 + rand() % 30;
         approvalRating = 50 + rand() % 30;
@@ -331,7 +404,8 @@ public:
         term = 0;
 
 
-        switch (style) {
+        switch (style)
+        {
         case AUTHORITARIAN: title = "badshah"; break;
         case DEMOCRATIC: title = "prime minister"; break;
         case ECONOMIC: title = "master"; break;
@@ -342,7 +416,6 @@ public:
         addEvent(message.c_str());
 
     }
-    // this will be used for death in war as wwll
     void warORmoraleTransition() {
         isAlive = true;
         age = 30 + rand() % 30;
@@ -369,6 +442,188 @@ public:
     }
 };
 
+struct TradeOffer {
+    string sender;
+    string receiver;
+    // What is being offered
+    int offeredGold;
+    int offeredFood;
+    int offeredWood;
+    int offeredIron;
+    // What is being requested
+    int requestedGold;
+    int requestedFood;
+    int requestedWood;
+    int requestedIron;
+    bool isPending;
+
+    TradeOffer() : offeredGold(0), offeredFood(0), offeredWood(0), offeredIron(0),
+        requestedGold(0), requestedFood(0), requestedWood(0), requestedIron(0),
+        isPending(true) {
+    }
+};
+
+struct Message {
+    string sender;
+    string content;
+    bool isAlliance;
+    bool isNegotiation;
+    bool isTrade;
+    bool accepted;
+    TradeOffer tradeOffer;
+
+    Message(string s, string c, bool alliance = false, bool negotiation = false, bool trade = false)
+        : sender(s), content(c), isAlliance(alliance), isNegotiation(negotiation),
+        isTrade(trade), accepted(false) {
+    }
+};
+
+class MessageBoard {
+private:
+    bool CanAffordTrade(Kingdom* kingdom, const TradeOffer& offer);
+    void ExecuteTrade(Kingdom* acceptingKingdom, Kingdom* offeringKingdom, const TradeOffer& offer);
+
+public:
+    static const int MAX_MESSAGES = 5;
+    vector<Message> messages;
+
+    void addMessage(const string& sender, const string& content, bool isAlliance = false, bool isNegotiation = false) {
+        Message newMsg(sender, content, isAlliance, isNegotiation);
+        messages.push_back(newMsg);
+        if (messages.size() > MAX_MESSAGES) {
+            messages.erase(messages.begin());
+        }
+    }
+    void proposeTradeOffer(const string& sender, const string& receiver, const TradeOffer& offer) {
+        string tradeDetails = "Trade Offer: ";
+        if (offer.offeredGold > 0) tradeDetails += to_string(offer.offeredGold) + " gold ";
+        if (offer.offeredFood > 0) tradeDetails += to_string(offer.offeredFood) + " food ";
+        if (offer.offeredWood > 0) tradeDetails += to_string(offer.offeredWood) + " wood ";
+        if (offer.offeredIron > 0) tradeDetails += to_string(offer.offeredIron) + " iron ";
+        tradeDetails += "for ";
+        if (offer.requestedGold > 0) tradeDetails += to_string(offer.requestedGold) + " gold ";
+        if (offer.requestedFood > 0) tradeDetails += to_string(offer.requestedFood) + " food ";
+        if (offer.requestedWood > 0) tradeDetails += to_string(offer.requestedWood) + " wood ";
+        if (offer.requestedIron > 0) tradeDetails += to_string(offer.requestedIron) + " iron";
+
+        Message newMsg(sender, tradeDetails, false, false, true);
+        newMsg.tradeOffer = offer;
+        messages.push_back(newMsg);
+        if (messages.size() > MAX_MESSAGES) {
+            messages.erase(messages.begin());
+        }
+    }
+    void drawMessageBoard(int x, int y, const string& currentKingdom) {
+        DrawRectangle(x, y, 400, 300, Fade(BLACK, 0.7f));
+        DrawRectangleLines(x, y, 400, 300, GOLD);
+        DrawText("Message Board", x + 10, y + 5, 20, GOLD);
+
+        int messageY = y + 30;
+
+        // Only show last 5 messages
+        int startIndex = (messages.size() > MAX_MESSAGES) ? messages.size() - MAX_MESSAGES : 0;
+
+        for (size_t i = startIndex; i < messages.size(); i++) {
+            const auto& msg = messages[i];
+            Color msgColor = WHITE;
+            if (msg.isAlliance) msgColor = GREEN;
+            if (msg.isNegotiation) msgColor = YELLOW;
+            if (msg.isTrade) msgColor = ORANGE;
+
+            string status = msg.accepted ? "[Accept]" :
+                (msg.accepted == false && !msg.tradeOffer.isPending) ? "[Reject]" : "";
+            string displayMsg = msg.sender + ": " + msg.content + status;
+
+            int maxLineLength = 45;
+            while (displayMsg.length() > maxLineLength) {
+                string line = displayMsg.substr(0, maxLineLength);
+                displayMsg = displayMsg.substr(maxLineLength);
+                DrawText(line.c_str(), x + 10, messageY, 16, msgColor);
+                messageY += 20;
+            }
+            DrawText(displayMsg.c_str(), x + 10, messageY, 16, msgColor);
+            messageY += 20;
+
+            // Clearing old messages if more than MAX_MESSAGES
+            if (messages.size() > MAX_MESSAGES) {
+                messages.erase(messages.begin());
+            }
+        }
+
+        if (!messages.empty()) {
+            Message& latestMsg = messages.back();
+            if (latestMsg.sender != currentKingdom && latestMsg.tradeOffer.isPending) {
+                if (latestMsg.isTrade) {
+                    DrawText("Y-Accept Trade  N-Decline ", x + 10, y + 270, 16, GOLD);
+                }
+            }
+        }
+    }
+    void drawMessageBoardRED(int x, int y, const string& currentKingdom) {
+        DrawRectangle(x, y, 400, 300, Fade(RED, 0.3f));
+        DrawRectangleLines(x, y, 400, 300, GOLD);
+        DrawText("Message Board", x + 10, y + 5, 20, GOLD);
+
+        int messageY = y + 30;
+
+        int startIndex = (messages.size() > MAX_MESSAGES) ? messages.size() - MAX_MESSAGES : 0;
+
+        for (size_t i = startIndex; i < messages.size(); i++) {
+            const auto& msg = messages[i];
+            Color msgColor = WHITE;
+            if (msg.isAlliance) msgColor = GREEN;
+            if (msg.isNegotiation) msgColor = YELLOW;
+            if (msg.isTrade) msgColor = ORANGE;
+
+            string status = msg.accepted ? "[Accept]" :
+                (msg.accepted == false && !msg.tradeOffer.isPending) ? "[Reject]" : "";
+            string displayMsg = msg.sender + ": " + msg.content + status;
+
+            int maxLineLength = 45;
+            while (displayMsg.length() > maxLineLength) {
+                string line = displayMsg.substr(0, maxLineLength);
+                displayMsg = displayMsg.substr(maxLineLength);
+                DrawText(line.c_str(), x + 10, messageY, 16, msgColor);
+                messageY += 20;
+            }
+            DrawText(displayMsg.c_str(), x + 10, messageY, 16, msgColor);
+            messageY += 20;
+
+            if (messages.size() > MAX_MESSAGES) {
+                messages.erase(messages.begin());
+            }
+        }
+
+        // interaction options if messages exist
+        if (!messages.empty()) {
+            Message& latestMsg = messages.back();
+            if (latestMsg.sender != currentKingdom && latestMsg.tradeOffer.isPending) {
+                if (latestMsg.isTrade) {
+                    DrawText("Y-Accept Trade  N-Decline  I-Inspect Offer", x + 10, y + 270, 16, GOLD);
+                }
+            }
+        }
+    }
+    void showAlliance(const string& sender, const string& receiver) {
+        string text = " has offered alliance ";
+        Message newMsg(sender, text, true, false, false);
+        messages.push_back(newMsg);
+        if (messages.size() > MAX_MESSAGES) {
+            messages.erase(messages.begin());
+        }
+    }
+    void showNegotiation(const string& sender, const string& receiver) {
+        string text = " has offered Negatiations ";
+        Message newMsg(sender, text, false, true, false);
+        messages.push_back(newMsg);
+        if (messages.size() > MAX_MESSAGES) {
+            messages.erase(messages.begin());
+        }
+    }
+    bool handleTradeInteraction(Kingdom& currentKingdom, Kingdom& otherKingdom);
+    bool handleInteraction(const string& currentKingdom);
+};
+
 struct Building {
     string name;
     Rectangle rect;
@@ -389,6 +644,75 @@ public:
     EventLog events;
     Population total;
 
+    shared_ptr<MessageBoard> messageBoard;
+    bool hasAlliance;
+    Kingdom() {
+        messageBoard = make_shared<MessageBoard>();
+        hasAlliance = false;
+        day = 0;
+        peasants.name = "Peasants";
+        peasants.population = 100;
+        peasants.unrest = 0.0;
+        merchants.name = "Merchants";
+        merchants.population = 30;
+        merchants.unrest = 0.0;
+        nobles.name = "Nobles";
+        nobles.population = 10;
+        nobles.unrest = 0.0;
+        leader.title = "King";
+        leader.name = "chachu";
+        leader.age = 40;
+        leader.approvalRating = 100;
+        army.soldiers = 20;
+        army.training = 50.0;
+        army.morale = 80.0;
+        army.corruption = 0.0;
+        economy.gold = 500.0;
+        economy.debt = 0.0;
+        economy.taxRate = 1.0;
+        economy.inflation = 0.0;
+        economy.interestRate = 0.05;
+        economy.corruption = 0.1;
+        resources.food = 200;
+        resources.wood = 150;
+        resources.stone = 50;
+        resources.iron = 130;
+
+        total.currentPopulation = peasants.population + merchants.population + nobles.population + army.soldiers;
+    }
+    void proposeAlliance(Kingdom& otherKingdom, const string& message) {
+        otherKingdom.messageBoard->addMessage(leader.title + " " + leader.name,
+            message, true, false);
+    }
+
+    void proposeNegotiation(Kingdom& otherKingdom, const string& terms) {
+        otherKingdom.messageBoard->addMessage(leader.title + " " + leader.name,
+            terms, false, true);
+    }
+    void handleTrade(Kingdom currentkingdom, Kingdom& otherkingdom) {
+        if (messageBoard->handleTradeInteraction(currentkingdom, otherkingdom)) {
+            economy.gold += 20;
+            otherkingdom.resources.food += 100;
+        }
+    }
+    void handleDiplomacy(Kingdom& otherKingdom) {
+        if (messageBoard->handleInteraction(leader.title + " " + leader.name)) {
+            Message& latestMsg = messageBoard->messages.back();
+            if (latestMsg.isAlliance) {
+                hasAlliance = true;
+                army.morale += 10;
+                economy.gold += 50;
+                otherKingdom.army.morale += 10;
+                otherKingdom.economy.gold += 50;
+            }
+            else if (latestMsg.isNegotiation) {
+                // negotiation results
+                resources.food += 100;
+                otherKingdom.resources.food += 100;
+            }
+        }
+    }
+
     void handleleadership() {
         string message;
         leader.AgeLeader();
@@ -407,7 +731,7 @@ public:
                 addEvent(deathMsg);
             }
         }
-        // death in the battles field is dependent on the morale of the army
+        // death in the battles field depends on the morale of the army
         if (army.morale < 20.0f) {
             leader.DeathInBattle();
             if (!leader.isAlive) {
@@ -445,38 +769,6 @@ public:
     }
 
     int warChance = 30;
-
-    Kingdom() {
-        day = 0;
-        peasants.name = "Peasants";
-        peasants.population = 100;
-        peasants.unrest = 0.0;
-        merchants.name = "Merchants";
-        merchants.population = 30;
-        merchants.unrest = 0.0;
-        nobles.name = "Nobles";
-        nobles.population = 10;
-        nobles.unrest = 0.0;
-        leader.title = "King";
-        leader.age = 40;
-        army.soldiers = 20;
-        army.training = 50.0;
-        army.morale = 80.0;
-        army.corruption = 0.0;
-        economy.gold = 500.0;
-        economy.debt = 0.0;
-        economy.taxRate = 1.0;
-        economy.inflation = 0.0;
-        economy.interestRate = 0.05;
-        economy.corruption = 0.1;
-        resources.food = 200;
-        resources.wood = 150;
-        resources.stone = 50;
-        resources.iron = 130;
-
-        total.currentPopulation = peasants.population + merchants.population + nobles.population + army.soldiers;
-    }
-
     void addEvent(const char* msg) {
         events.add(msg);
     }
@@ -823,6 +1115,95 @@ public:
 
 };
 
+bool MessageBoard::CanAffordTrade(Kingdom* kingdom, const TradeOffer& offer) {
+    if (!kingdom) return false;
+    if (kingdom->economy.gold < offer.requestedGold) return false;
+    if (kingdom->resources.food < offer.requestedFood) return false;
+    if (kingdom->resources.wood < offer.requestedWood) return false;
+    if (kingdom->resources.iron < offer.requestedIron) return false;
+    return true;
+}
+void MessageBoard::ExecuteTrade(Kingdom* acceptingKingdom, Kingdom* offeringKingdom, const TradeOffer& offer) {
+    if (!acceptingKingdom || !offeringKingdom) return;
+
+    // Transfer resources from offering kingdom to accepting kingdom
+    acceptingKingdom->economy.gold += offer.offeredGold;
+    acceptingKingdom->resources.food += offer.offeredFood;
+    acceptingKingdom->resources.wood += offer.offeredWood;
+    acceptingKingdom->resources.iron += offer.offeredIron;
+
+    offeringKingdom->economy.gold -= offer.offeredGold;
+    offeringKingdom->resources.food -= offer.offeredFood;
+    offeringKingdom->resources.wood -= offer.offeredWood;
+    offeringKingdom->resources.iron -= offer.offeredIron;
+
+    offeringKingdom->economy.gold += offer.requestedGold;
+    offeringKingdom->resources.food += offer.requestedFood;
+    offeringKingdom->resources.wood += offer.requestedWood;
+    offeringKingdom->resources.iron += offer.requestedIron;
+
+    acceptingKingdom->economy.gold -= offer.requestedGold;
+    acceptingKingdom->resources.food -= offer.requestedFood;
+    acceptingKingdom->resources.wood -= offer.requestedWood;
+    acceptingKingdom->resources.iron -= offer.requestedIron;
+
+    acceptingKingdom->merchants.unrest -= 5;
+    offeringKingdom->merchants.unrest -= 5;
+    acceptingKingdom->economy.inflation -= 1.0f;
+    offeringKingdom->economy.inflation -= 1.0f;
+}
+bool MessageBoard::handleTradeInteraction(Kingdom& currentKingdom, Kingdom& otherKingdom) {
+    if (messages.empty()) return false;
+
+    Message& latestMsg = messages.back();
+    if (latestMsg.sender == currentKingdom.leader.name || !latestMsg.isTrade) return false;
+
+
+    if (IsKeyPressed(KEY_Y)) {
+        // Check if kingdom has enough resources
+        if (CanAffordTrade(&otherKingdom, latestMsg.tradeOffer)) {
+            ExecuteTrade(&currentKingdom, &otherKingdom, latestMsg.tradeOffer);
+            latestMsg.accepted = true;
+            latestMsg.tradeOffer.isPending = false;
+            addMessage(currentKingdom.leader.title + " " + currentKingdom.leader.name, "Trade accepted-Resources exchanged!");
+            return true;
+        }
+        else {
+            addMessage(currentKingdom.leader.title + " " + currentKingdom.leader.name, "Cannot afford trade-Insufficient resources!");
+        }
+    }
+    else if (IsKeyPressed(KEY_N)) {
+        latestMsg.accepted = false;
+        latestMsg.tradeOffer.isPending = false;
+        addMessage(currentKingdom.leader.title + " " + currentKingdom.leader.name,
+            "Trade declined - Relations damaged.");
+        // Negative impact on relations
+        currentKingdom.nobles.unrest += 5;
+        otherKingdom.nobles.unrest += 5;
+        return false;
+    }
+    return false;
+}
+bool MessageBoard::handleInteraction(const string& currentKingdom) {
+    // This method can remain the same as it only uses the kingdom name as a string
+    if (messages.empty()) return false;
+
+    Message& latestMsg = messages.back();
+    if (latestMsg.sender == currentKingdom) return false;
+
+    if (latestMsg.isAlliance || latestMsg.isNegotiation) {
+        if (IsKeyPressed(KEY_Y)) {
+            latestMsg.accepted = true;
+            addMessage(currentKingdom, "Offer Accepted!");
+            return true;
+        }
+        else if (IsKeyPressed(KEY_N)) {
+            addMessage(currentKingdom, "Offer Declined.");
+            return false;
+        }
+    }
+    return false;
+}
 
 class RenderSystem {
 
@@ -830,6 +1211,7 @@ private:
     Building buildings[10];
     int buildingCount;
     Rectangle chiefPosition;
+    Rectangle newKingdomChiefPosition; // Added for new kingdom chief
     float gridSize;
     int screenWidth;
     int screenHeight;
@@ -839,50 +1221,605 @@ private:
     string messagemenue;
     int  currentLevel = 1;
     Kingdom kingdom;
+    Kingdom newKingdom;
     Population population;
     Military military;
+    Military newMilitary;
     Leadership leadership;
-    // Military army;
+    Leadership newLeadership;
+    vector<Kingdom> additionalKingdoms;
+    Building newKingdomBuildings[5];
+    Texture2D newKingdomChiefTexture;
+    bool newKingdomChiefTextureLoaded = false;
 
 public:
+    void DrawMessageBoardOptions(int x, int y) {
+        DrawText("Diplomacy Options:", x, y + 35, 18, WHITE);
+        DrawText("A - Propose Alliance", x, y + 55, 16, GREEN);
+        DrawText("N - Open Negotiations", x, y + 75, 16, YELLOW);
+        DrawText("T - Send Trade Offer", x, y + 95, 16, ORANGE);
+    }
+
+    void HandleMessageBoardInput(Kingdom& currentKingdom, Kingdom& otherKingdom) {
+        if (IsKeyPressed(KEY_A)) {
+            string msg = "Would you like to form an alliance?";
+            currentKingdom.proposeAlliance(otherKingdom, msg);
+            currentKingdom.messageBoard->showAlliance(currentKingdom.leader.title + " " + currentKingdom.leader.name, otherKingdom.leader.title + " " + otherKingdom.leader.name);
+
+        }
+        else if (IsKeyPressed(KEY_N)) {
+            string terms = "Proposing peace negotiations";
+            currentKingdom.proposeNegotiation(otherKingdom, terms);
+            currentKingdom.messageBoard->showNegotiation(currentKingdom.leader.title + " " + currentKingdom.leader.name, otherKingdom.leader.title + " " + otherKingdom.leader.name);
+
+        }
+        else if (IsKeyPressed(KEY_T)) {
+            // Create a trade offer based on current kingdom's resources
+            TradeOffer offer;
+            offer.sender = currentKingdom.leader.name;
+            offer.receiver = otherKingdom.leader.name;
+
+            // Example trade offer - you can modify these values or make them dynamic
+            if (currentKingdom.economy.gold >= 50) {
+                offer.offeredGold = 50;
+                offer.requestedFood = 100;
+            }
+            else if (currentKingdom.resources.food >= 100) {
+                offer.offeredFood = 100;
+                offer.requestedGold = 50;
+            }
+            else if (currentKingdom.resources.wood >= 50) {
+                offer.offeredWood = 50;
+                offer.requestedIron = 25;
+            }
+
+            currentKingdom.messageBoard->proposeTradeOffer(
+                currentKingdom.leader.title + " " + currentKingdom.leader.name,
+                otherKingdom.leader.title + " " + otherKingdom.leader.name,
+                offer
+            );
+        }
+    }
+    // functions of the new kingdom 
+    void LoadNewKingdomChiefTexture() {
+        if (!newKingdomChiefTextureLoaded) {
+            if (FileExists("king50.png")) {
+                Image chiefImage = LoadImage("king50.png");
+                if (chiefImage.data != NULL) {
+                    newKingdomChiefTexture = LoadTextureFromImage(chiefImage);
+                    UnloadImage(chiefImage);
+                    newKingdomChiefTextureLoaded = true;
+                }
+
+            }
+
+        }
+    }
+    void UnloadNewKingdomChiefTexture() {
+        if (newKingdomChiefTextureLoaded) {
+            UnloadTexture(newKingdomChiefTexture);
+            newKingdomChiefTextureLoaded = false;
+        }
+    }
+    void UpdateNewKingdomChiefMovement() {
+        if (IsKeyPressed(KEY_RIGHT) && newKingdomChiefPosition.x + gridSize < screenWidth)
+            newKingdomChiefPosition.x += gridSize;
+        if (IsKeyPressed(KEY_LEFT) && newKingdomChiefPosition.x > 0)
+            newKingdomChiefPosition.x -= gridSize;
+        if (IsKeyPressed(KEY_DOWN) && newKingdomChiefPosition.y + gridSize < screenHeight)
+            newKingdomChiefPosition.y += gridSize;
+        if (IsKeyPressed(KEY_UP) && newKingdomChiefPosition.y > 0)
+            newKingdomChiefPosition.y -= gridSize;
+    }
+
+    void InitNewKingdomBuildings() {
+        newKingdomBuildings[0] = { "New Castle", {600, 200, (float)gridSize, (float)gridSize}, DARKGRAY };
+        newKingdomBuildings[1] = { "New Barrack", {350, 250, (float)gridSize, (float)gridSize}, RED };
+        newKingdomBuildings[2] = { "New Market", {600, 400, (float)gridSize, (float)gridSize}, ORANGE };
+        newKingdomBuildings[3] = { "New Blacksmith", {200, 350, (float)gridSize, (float)gridSize}, BROWN };
+        newKingdomBuildings[4] = { "New Church", {900, 400, (float)gridSize, (float)gridSize}, PURPLE };
+    }
+
+    // managing the collision of king with buildings and showing the menue
+    void newkingdomcollisions() {
+        for (int i = 0; i < 5; i++) {
+            if (CheckCollisionRecs(newKingdomChiefPosition, newKingdomBuildings[i].rect))
+            {
+                // Different menus based on building type
+                if (newKingdomBuildings[i].name == "New Castle") {
+                    DrawText("Qila Menu", 20, 530, 20, RED);
+                    DrawText("1. Check Kingdom Status", 20, 555, 20, ORANGE);
+                    DrawText("2. Change Leadership Style", 20, 580, 20, ORANGE);
+
+                    if (IsKeyPressed(KEY_ONE)) {
+                        char statusMsg[128];
+                        sprintf_s(statusMsg, sizeof(statusMsg), "Kingdom Status: %s rule, %d approval",
+                            newKingdom.leader.title.c_str(),
+                            newKingdom.leader.approvalRating);
+                        newKingdom.addEvent(statusMsg);
+                    }
+                    else if (IsKeyPressed(KEY_TWO)) {
+                        newKingdom.leader.style = static_cast<LeadershipStyle>(
+                            (static_cast<int>(newKingdom.leader.style) + 1) % 3);
+                        char styleMsg[128];
+                        sprintf_s(styleMsg, sizeof(styleMsg), "Changed leadership style to %d",
+                            static_cast<int>(newKingdom.leader.style));
+                        newKingdom.addEvent(styleMsg);
+                    }
+                }
+                else if (newKingdomBuildings[i].name == "New Barrack") {
+                    DrawText("Army Adda", 20, 530, 20, RED);
+                    DrawText("1. Train Troops (+5 morale)", 20, 555, 20, ORANGE);
+                    DrawText("2. Recruit Soldiers (10% of peasants)", 20, 580, 20, ORANGE);
+
+                    if (IsKeyPressed(KEY_ONE)) {
+                        if (newKingdom.economy.gold >= 20) {
+                            newKingdom.army.morale += 5;
+                            newKingdom.economy.gold -= 20;
+                            newKingdom.addEvent("Troops trained. Morale increased.");
+                        }
+                        else {
+                            newKingdom.addEvent("Not enough gold to train troops.");
+                        }
+                    }
+                    else if (IsKeyPressed(KEY_TWO)) {
+                        int recruits = newKingdom.peasants.population / 10;
+                        if (recruits > 0) {
+                            newKingdom.army.soldiers += recruits;
+                            newKingdom.peasants.population -= recruits;
+                            char recruitMsg[128];
+                            sprintf_s(recruitMsg, sizeof(recruitMsg), "Recruited %d new soldiers", recruits);
+                            newKingdom.addEvent(recruitMsg);
+                        }
+                        else {
+                            newKingdom.addEvent("Not enough peasants to recruit.");
+                        }
+                    }
+                }
+                else if (newKingdomBuildings[i].name == "New Blacksmith")
+                {
+                    DrawText("Lohar", 20, 530, 20, RED);
+                    DrawText("1. Forge swords (10 iron)", 20, 555, 20, ORANGE);
+                    DrawText("2. Forge Arrows (10 wood + 2 iron)", 20, 580, 20, ORANGE);
+                    DrawText("3. Construct Catapult (100 iron + 50 wood)", 20, 605, 20, ORANGE);
+                    DrawText("4. Buy Weapons", 20, 630, 20, ORANGE);
+
+                    if (IsKeyPressed(KEY_ONE)) {
+                        if (newKingdom.resources.iron >= 10)
+                        {
+                            newKingdom.resources.iron -= 10;
+                            newKingdom.addEvent("Sword Forged.");
+                        }
+                        else {
+                            newKingdom.addEvent("Not enough gold to forge sword.");
+                        }
+                    }
+                    else if (IsKeyPressed(KEY_TWO))
+                    {
+                        // int recruits = newKingdom.peasants.population / 10;
+                        if (newKingdom.resources.wood >= 10 && newKingdom.resources.iron >= 2)
+                        {
+                            newKingdom.resources.wood -= 10;
+                            newKingdom.resources.iron -= 2;
+                            newKingdom.addEvent("Arrows Forged.");
+                            //  char recruitMsg[128];
+                            //  sprintf_s(recruitMsg, sizeof(recruitMsg), "Recruited %d new soldiers", recruits);
+                             // newKingdom.addEvent(recruitMsg);
+                        }
+                        else {
+                            newKingdom.addEvent("Not enough resources to forge arrows.");
+                        }
+                    }
+                    else if (IsKeyPressed(KEY_THREE))
+                    {
+                        // int recruits = newKingdom.peasants.population / 10;
+                        if (newKingdom.resources.wood >= 50 && newKingdom.resources.iron >= 100) {
+                            newKingdom.resources.wood -= 50;
+                            newKingdom.resources.iron -= 100;
+                            newKingdom.addEvent("Catapult Constructed.");
+                        }
+                        else {
+                            newKingdom.addEvent("Not enough resources to construct catapult.");
+                        }
+                    }
+                    else if (IsKeyPressed(KEY_FOUR))
+                    {
+                        //  int recruits = newKingdom.peasants.population / 10;
+                      /*    if (recruits > 0) {
+                              newKingdom.army.soldiers += recruits;
+                              newKingdom.peasants.population -= recruits;
+                              char recruitMsg[128];
+                              sprintf_s(recruitMsg, sizeof(recruitMsg), "Recruited %d new soldiers", recruits);
+                              newKingdom.addEvent(recruitMsg);
+                          }
+                          else {
+                              newKingdom.addEvent("Not enough peasants to recruit.");*/
+                              // }
+                    }
+                }
+                else if (newKingdomBuildings[i].name == "New Market")
+                {
+                    DrawText("Dukan", 20, 530, 20, RED);
+                    DrawText("1. Buy Food (10 gold / 10 food)", 20, 555, 20, ORANGE);
+                    DrawText("2. Trade Wood for Food (10 wood / 10 food)", 20, 580, 20, ORANGE);
+                    DrawText("3. Trade Iron for Gold ", 20, 605, 20, ORANGE);
+
+                    if (IsKeyPressed(KEY_ONE))
+                    {
+                        if (newKingdom.economy.gold >= 10)
+                        {
+                            newKingdom.economy.gold -= 10;
+                            newKingdom.resources.food += 10;
+                            //messagemenue = "Executed: Bought 10 food for 10 gold";
+                            newKingdom.events.add("Executed: Bought 10 food for 10 gold");
+                        }
+                        else
+                        {
+                            messagemenue = "Not enough gold to buy food";
+                            newKingdom.events.add(messagemenue.c_str());
+                        }
+                    }
+                    else if (IsKeyPressed(KEY_TWO))
+                    {
+                        int trade_wood = 10;
+                        if (newKingdom.resources.wood >= trade_wood)
+                        {
+                            int food_gained = 10;
+                            if (newKingdom.resources.food < newKingdom.resources.wood)
+                            {
+                                food_gained = 20;
+                            }
+                            else if (newKingdom.resources.wood < newKingdom.resources.food)
+                            {
+                                food_gained = 5;
+                            }
+                            newKingdom.resources.wood -= trade_wood;
+                            newKingdom.resources.food += food_gained;
+                            messagemenue = "  Executed: Traded " + to_string(trade_wood) + " wood for " + to_string(food_gained) + " food";
+                            newKingdom.events.add(messagemenue.c_str());
+                        }
+                        else
+                        {
+                            messagemenue = "  Not enough wood to trade for food";
+                            newKingdom.events.add(messagemenue.c_str());
+                        }
+                    }
+                    else if (IsKeyPressed(KEY_THREE))
+                    {
+                        int trade_iron = 10;
+                        if (newKingdom.resources.iron >= trade_iron)
+                        {
+                            int gold_gained = 10;
+                            if (newKingdom.economy.gold < newKingdom.resources.iron)
+                            {
+                                gold_gained = 20;
+                            }
+                            else if (newKingdom.resources.iron < newKingdom.economy.gold)
+                            {
+                                gold_gained = 5;
+                            }
+                            newKingdom.resources.iron -= trade_iron;
+                            newKingdom.economy.gold += gold_gained;
+                            messagemenue = " Executed: Traded " + to_string(trade_iron) + " iron for " + to_string(gold_gained) + " gold";
+                            newKingdom.events.add(messagemenue.c_str());
+                        }
+                        else
+                        {
+                            messagemenue = " Not enough iron to trade for gold";
+                            newKingdom.events.add(messagemenue.c_str());
+                        }
+                    }
+
+                }
+                else if (newKingdomBuildings[i].name == "New Church")
+                {
+                    DrawText("Church", 20, 530, 20, RED);
+                    DrawText("1. Noble Meeting (unrest -= 5)", 20, 555, 20, ORANGE);
+                    DrawText("2. War negotiations (morale += 10)", 20, 580, 20, ORANGE);
+                    DrawText("3. Worship (unrest -= 2 && morale += 5)", 20, 605, 20, ORANGE);
+
+                    if (IsKeyPressed(KEY_ONE))
+                    {
+                        if (newLeadership.approvalRating < 50)
+                        {
+                            newLeadership.approvalRating += 10;
+                            newKingdom.nobles.unrest -= 10;
+                            newKingdom.peasants.unrest -= 10;
+                            newKingdom.merchants.unrest -= 10;
+                        }
+                        else
+                        {
+                            newKingdom.events.add("No need for Noble Meeting.");
+                        }
+                    }
+                    else if (IsKeyPressed(KEY_TWO))
+                    {
+                        if (newKingdom.warChance > 50)
+                        {
+                            newKingdom.events.add("Executed: Bought 10 food for 10 gold");
+                            cout << "War Negotiations under way \n";
+                            if (rand() % 4 == 4)
+                            {
+                                newKingdom.events.add("Negotiations unsuccessful!");
+                                newLeadership.approvalRating -= 10;
+                                newKingdom.nobles.unrest += 10;
+                                newKingdom.peasants.unrest += 10;
+                                newKingdom.merchants.unrest += 10;
+                            }
+                            else
+                            {
+                                newKingdom.events.add("Negotiations successful");
+                                newLeadership.approvalRating += 10;
+                                newKingdom.nobles.unrest -= 10;
+                                newKingdom.peasants.unrest -= 10;
+                                newKingdom.merchants.unrest -= 10;
+                            }
+                        }
+                        else {
+                            newKingdom.events.add(" No War Negotiations in progress");
+                        }
+                    }
+                    else if (IsKeyPressed(KEY_THREE))
+                    {
+                        newLeadership.approvalRating += 2;
+                        newKingdom.nobles.unrest -= 3;
+                        newKingdom.peasants.unrest -= 3;
+                        newKingdom.merchants.unrest -= 3;
+                        newMilitary.morale += 5;
+                    }
+                }
+
+
+            }
+
+
+
+        }
+    }
+
+
+
+    void addNewKingdom() {
+        // Use string concatenation method compatible with C++
+
+        // Customize the new kingdom's initial stats differently from the main kingdom
+        newKingdom.peasants.name = (string("Clan ") + " Peasants").c_str();
+        newKingdom.peasants.population = 250;
+        newKingdom.peasants.unrest = 10.0;
+
+        newKingdom.merchants.name = (string("Clan ") + " Merchants").c_str();
+        newKingdom.merchants.population = 50;
+        newKingdom.merchants.unrest = 5.0;
+
+        newKingdom.nobles.name = (string("Clan ") + " Nobles").c_str();
+        newKingdom.nobles.population = 15;
+        newKingdom.nobles.unrest = 2.0;
+
+        newKingdom.leader.title = "Chief";
+
+        newKingdom.leader.name = string("Hasham").c_str();
+
+        newKingdom.leader.age = 35;
+        newKingdom.leader.approvalRating = 70;
+
+        newKingdom.army.soldiers = 50;
+        newKingdom.army.training = 40.0;
+        newKingdom.army.morale = 75.0;
+        newKingdom.army.corruption = 0.2;
+
+        newKingdom.economy.gold = 250.0;
+        newKingdom.economy.debt = 0.0;
+        newKingdom.economy.taxRate = 0.8;
+        newKingdom.economy.inflation = 0.1;
+        newKingdom.economy.interestRate = 0.03;
+        newKingdom.economy.corruption = 0.2;
+
+        newKingdom.resources.food = 300;
+        newKingdom.resources.wood = 100;
+        newKingdom.resources.stone = 30;
+        newKingdom.resources.iron = 80;
+    }
+
+    void newwindow() {
+        if (additionalKingdoms.empty()) {
+            addNewKingdom();
+        }
+
+        if (newKingdomChiefPosition.width == 0) {
+            newKingdomChiefPosition = { 500, 400, (float)gridSize, (float)gridSize };
+        }
+
+        LoadNewKingdomChiefTexture();
+
+        bool inNewKingdomWindow = true;
+
+        while (inNewKingdomWindow && !WindowShouldClose()) {
+            if (IsKeyPressed(KEY_ESCAPE)) {
+                inNewKingdomWindow = false;
+                continue;
+            }
+            InitNewKingdomBuildings();
+
+            BeginDrawing();
+            ClearBackground(BLACK);
+
+            pixelbackground2();
+
+            UpdateNewKingdomChiefMovement();
+            Drawdiscription2();
+            if (newKingdomChiefTextureLoaded) {
+                DrawTexture(newKingdomChiefTexture, newKingdomChiefPosition.x, newKingdomChiefPosition.y, WHITE);
+            }
+            else {
+                DrawRectangleRec(newKingdomChiefPosition, RED);
+            }
+
+            newKingdom.messageBoard->drawMessageBoardRED(780, 400, newKingdom.leader.title + " " + newKingdom.leader.name);
+            DrawMessageBoardOptions(790, 580);
+            newKingdom.handleDiplomacy(kingdom);
+            newKingdom.handleTrade(newKingdom, kingdom);
+            HandleMessageBoardInput(newKingdom, kingdom);
+
+
+            newkingdomcollisions();
+
+            char msg[128];
+
+            DrawText("New Clan Population:", 20, 90, 18, GREEN);
+
+            sprintf_s(msg, sizeof(msg), "Peasants: ");
+            _itoa_s(newKingdom.peasants.population, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            DrawText(msg, 30, 110, 18, YELLOW);
+
+            sprintf_s(msg, sizeof(msg), "Merchants: ");
+            _itoa_s(newKingdom.merchants.population, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            DrawText(msg, 30, 130, 18, YELLOW);
+
+            sprintf_s(msg, sizeof(msg), "Nobles: ");
+            _itoa_s(newKingdom.nobles.population, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            DrawText(msg, 30, 150, 18, YELLOW);
+
+            sprintf_s(msg, sizeof(msg), "Unrest - Peasants: ");
+            _itoa_s(static_cast<int>(newKingdom.peasants.unrest), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            strcat_s(msg, sizeof(msg), "%, Merchants: ");
+            _itoa_s(static_cast<int>(newKingdom.merchants.unrest), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            strcat_s(msg, sizeof(msg), "%, Nobles: ");
+            _itoa_s(static_cast<int>(newKingdom.nobles.unrest), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            strcat_s(msg, sizeof(msg), "%");
+            DrawText(msg, 30, 170, 16, (newKingdom.peasants.unrest > 50 || newKingdom.merchants.unrest > 50 || newKingdom.nobles.unrest > 50) ? RED : YELLOW);
+
+            DrawText("Resources:", 20, 200, 18, GREEN);
+
+            sprintf_s(msg, sizeof(msg), "Food: ");
+            _itoa_s(newKingdom.resources.food, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            DrawText(msg, 30, 220, 18, (newKingdom.resources.food < (newKingdom.peasants.population + newKingdom.merchants.population + newKingdom.nobles.population)) ? RED : YELLOW);
+
+            sprintf_s(msg, sizeof(msg), "Wood: ");
+            _itoa_s(newKingdom.resources.wood, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            DrawText(msg, 140, 220, 18, (newKingdom.resources.wood < (int)((newKingdom.peasants.population + newKingdom.merchants.population + newKingdom.nobles.population) * 0.1f)) ? RED : YELLOW);
+
+            sprintf_s(msg, sizeof(msg), "Stone: ");
+            _itoa_s(newKingdom.resources.stone, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            DrawText(msg, 250, 220, 18, YELLOW);
+
+            sprintf_s(msg, sizeof(msg), "Iron: ");
+            _itoa_s(newKingdom.resources.iron, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            DrawText(msg, 360, 220, 18, (newKingdom.resources.iron < newKingdom.army.soldiers * 1) ? RED : YELLOW);
+
+            DrawText("Economy:", 20, 250, 18, GREEN);
+
+            sprintf_s(msg, sizeof(msg), "Gold: ");
+            _itoa_s(static_cast<int>(newKingdom.economy.gold), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            DrawText(msg, 30, 270, 18, (newKingdom.economy.gold < 20.0f) ? RED : YELLOW);
+
+            sprintf_s(msg, sizeof(msg), "Debt: ");
+            _itoa_s(static_cast<int>(newKingdom.economy.debt), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            DrawText(msg, 140, 270, 18, (newKingdom.economy.debt > 0.0f) ? RED : YELLOW);
+
+            sprintf_s(msg, sizeof(msg), "Tax Rate: ");
+            _itoa_s(static_cast<int>(newKingdom.economy.taxRate * 100), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            strcat_s(msg, sizeof(msg), "%");
+            DrawText(msg, 30, 290, 18, YELLOW);
+
+            sprintf_s(msg, sizeof(msg), "Inflation: ");
+            _itoa_s(static_cast<int>(newKingdom.economy.inflation * 100), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            strcat_s(msg, sizeof(msg), "%");
+            DrawText(msg, 180, 290, 18, (newKingdom.economy.inflation > 0.3f) ? RED : YELLOW);
+
+            sprintf_s(msg, sizeof(msg), "Corruption: ");
+            _itoa_s(static_cast<int>(newKingdom.economy.corruption * 100), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            strcat_s(msg, sizeof(msg), "%");
+            DrawText(msg, 340, 290, 18, (newKingdom.economy.corruption > 0.5f) ? RED : YELLOW);
+
+            DrawText("Military:", 20, 320, 18, GREEN);
+
+            sprintf_s(msg, sizeof(msg), "Soldiers: ");
+            _itoa_s(newKingdom.army.soldiers, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            DrawText(msg, 30, 340, 18, (newKingdom.army.soldiers == 0) ? RED : YELLOW);
+
+            sprintf_s(msg, sizeof(msg), "Training: ");
+            _itoa_s(static_cast<int>(newKingdom.army.training), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            strcat_s(msg, sizeof(msg), "%");
+            DrawText(msg, 140, 340, 18, (newKingdom.army.training < 30.0f) ? RED : YELLOW);
+
+            sprintf_s(msg, sizeof(msg), "Morale: ");
+            _itoa_s(static_cast<int>(newKingdom.army.morale), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            strcat_s(msg, sizeof(msg), "%");
+            DrawText(msg, 270, 340, 18, (newKingdom.army.morale < 50.0f) ? RED : YELLOW);
+
+            sprintf_s(msg, sizeof(msg), "Army Corruption: ");
+            _itoa_s(static_cast<int>(newKingdom.army.corruption * 100), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            strcat_s(msg, sizeof(msg), "%");
+            DrawText(msg, 30, 360, 18, (newKingdom.army.corruption > 0.3f) ? RED : YELLOW);
+
+            DrawText("Press ESC to return to main kingdom", 30, 660, 18, WHITE);
+
+            DrawText("Recent Events:", 20, 400, 18, GREEN);
+            int evCount = newKingdom.events.count;
+            for (int i = 0; i < evCount; ++i) {
+                DrawText(newKingdom.events.messages[i], 30, 425 + 20 * i, 16, GOLD);
+            }
+            if (evCount == 0) {
+                DrawText("No events yet.", 30, 425, 16, GOLD);
+            }
+
+            if (IsKeyPressed(KEY_SPACE)) {
+                newKingdom.updateday();
+            }
+
+            EndDrawing();
+        }
+    }
+    void newclan() {
+        DrawText("Press ENTER to add a new clan", 20, 600, 20, GREEN);
+
+        if (IsKeyPressed(KEY_ENTER)) {
+            newwindow();
+        }
+    }
+
+
     void SelectKingSkin() {
         bool skinMenuActive = true;
 
         while (skinMenuActive && !WindowShouldClose()) {
             BeginDrawing();
-            ClearBackground(BLACK);
+            Image back = LoadImage("characterback.PNG");
+            Texture2D backaa = LoadTextureFromImage(back);
+            UnloadImage(back);
+            DrawTexture(backaa, 0, 0, WHITE);
 
             Image character = LoadImage("kinga.PNG");
             Texture2D tex = LoadTextureFromImage(character);
             UnloadImage(character);
-            DrawTexture(tex, 430, 200, WHITE);
+            DrawTexture(tex, 430, 300, WHITE);
 
             Image chara = LoadImage("kingccrop.PNG");
             Texture2D texa = LoadTextureFromImage(chara);
             UnloadImage(chara);
-            DrawTexture(texa, 30, 200, WHITE);
+            DrawTexture(texa, 30, 300, WHITE);
 
             Image charaa = LoadImage("chachu400.PNG");
             Texture2D texaa = LoadTextureFromImage(charaa);
             UnloadImage(charaa);
-            DrawTexture(texaa, 800, 120, WHITE);
+            DrawTexture(texaa, 800, 220, WHITE);
 
             Rectangle titleButtonRect = { 430, 10, 380, 60 };
             float borderRadius = 20.0f;
-            DrawRectangleRounded(titleButtonRect, borderRadius, 0, GOLD);
+            DrawRectangleRounded(titleButtonRect, borderRadius, 0, SKYBLUE);
             DrawText("Select King Skin", 455, 25, 40, BLACK);
 
             Rectangle optionABackground = { 80, 640, 200, 40 };
-            DrawRectangleRounded(optionABackground, borderRadius, 0, DARKGRAY);
-            DrawText("A. SON", 90, 650, 20, WHITE);
+            DrawRectangleRounded(optionABackground, borderRadius, 0, SKYBLUE);
+            DrawText("A. SON", 90, 650, 20, BLACK);
 
             Rectangle optionBBackground = { 520, 640, 200, 40 };
-            DrawRectangleRounded(optionBBackground, borderRadius, 0, DARKGRAY);
-            DrawText("B. ELDER SON", 530, 650, 20, WHITE);
+            DrawRectangleRounded(optionBBackground, borderRadius, 0, SKYBLUE);
+            DrawText("B. ELDER SON", 530, 650, 20, BLACK);
 
             Rectangle optionCBackground = { 980, 640, 200, 40 };
-            DrawRectangleRounded(optionCBackground, borderRadius, 0, DARKGRAY);
-            DrawText("C. CHACHU", 1000, 650, 20, WHITE);
+            DrawRectangleRounded(optionCBackground, borderRadius, 0, SKYBLUE);
+            DrawText("C. CHACHU", 1000, 650, 20, BLACK);
 
             if (IsKeyPressed(KEY_A)) {
                 kingSkin = DEFAULT;
@@ -949,23 +1886,7 @@ public:
         if (IsKeyPressed(KEY_DOWN) && chiefPosition.y + gridSize < screenHeight) chiefPosition.y += gridSize;
         if (IsKeyPressed(KEY_UP) && chiefPosition.y > 0) chiefPosition.y -= gridSize;
     }
-    // building 0 menue display
-    // not in use 
-    void menueB0(int option) {
-        switch (option) {
-        case 1:
-            military.DisplayMilitary(1050, 550);
-            break;
-        case 2:
-            population.DisplayPopulation(1050, 550);
-            break;
-        case 3:
-            leadership.DisplayLeadership();
-            break;
-        default:
-            break;
-        }
-    }
+
     void DrawGrid() {
         for (int x = 0; x < screenWidth; x += gridSize)
             DrawLine(x, 0, x, screenHeight, LIGHTGRAY);
@@ -995,8 +1916,29 @@ public:
         int textY = boxY + padding;
         DrawText(label.c_str(), textX, textY, fontSize, BEIGE);
     }
+    void Drawdiscription2() const
+    {
+        string label = "MARS";
 
-    // DRAW BULIDINGS
+        int fontSize = 20;
+        int textW = MeasureText(label.c_str(), fontSize);
+        int textH = fontSize;
+
+        int padding = 8;
+        int boxX = 10;
+        int boxY = 10;
+        int boxW = textW + padding * 2;
+        int boxH = textH + padding * 2;
+
+        DrawRectangleRounded({ (float)boxX, (float)boxY,
+                               (float)boxW, (float)boxH }, 0.25f, 8, DARKBROWN);
+
+
+        int textX = boxX + padding;
+        int textY = boxY + padding;
+        DrawText(label.c_str(), textX, textY, fontSize, BEIGE);
+    }
+
     void DrawBuildings() {
         int spacing = gridSize * 3;
 
@@ -1142,6 +2084,7 @@ public:
         DrawCircle(swordHandleX, swordHandleY + handleH, 3, GOLD);
     }
     void pixelCheif() {
+        ;
         //if (kingSkin = DEFAULT) {
         int chiefx = chiefPosition.x;
         int chiefy = chiefPosition.y;
@@ -1149,7 +2092,6 @@ public:
         Texture2D chieftex = LoadTextureFromImage(chiefimage); // Convert image to texture
         UnloadImage(chiefimage);  // We no longer need the image after converting it to a texture
         DrawTexture(chieftex, chiefx, chiefy, WHITE);
-        /*}*/
 
         //if (kingSkin = SKIN1) {
         //    int chiefx = chiefPosition.x;
@@ -1231,11 +2173,13 @@ public:
             DrawLine(0, y, screenWidth, y, GRAY);
         }
     }
+
     RenderSystem() {}
 
     // initialization of the builind dimensions / name / color 
     // Chief starting position
     // population military leadership initialization
+    // Update the Init method to initialize the new kingdom chief position
     void Init() {
         screenWidth = 1200;
         screenHeight = 700;
@@ -1243,8 +2187,11 @@ public:
         InitWindow(screenWidth, screenHeight, "Stronghold");
         SetTargetFPS(60);
 
-        // Chief starting position
-        chiefPosition = { 1000,500 , (float)gridSize, (float)gridSize };
+        chiefPosition = { 1000, 500, (float)gridSize, (float)gridSize };
+
+        newKingdomChiefPosition = { 500, 400, (float)gridSize, (float)gridSize };
+
+        InitNewKingdomBuildings();
 
         buildingCount = 7;
         const int x = 10;
@@ -1252,7 +2199,6 @@ public:
 
         // initialization of the builind dimensions / name / color 
         buildings[0] = { "Castle",
-
             {(float)(x * gridSize - 50), // rect.x
             (float)(y * gridSize - 100),  //rect.y
             (float)gridSize,
@@ -1261,18 +2207,20 @@ public:
 
         buildings[1] = { "Barracks", {(float)((4) * gridSize), (float)((y - 1) * gridSize), (float)gridSize, (float)gridSize}, RED };
         buildings[2] = { "Market", {(float)((650)), (float)((550)), (float)gridSize, (float)gridSize}, ORANGE };
-        //buildings[3] = { "Granary", {(float)((x - 1) * gridSize - 70), (float)((y + 1) * gridSize), (float)gridSize, (float)gridSize}, RED };
-        //buildings[4] = { "Town Hall", {(float)((x + 1) * gridSize + 70), (float)((y + 1) * gridSize), (float)gridSize, (float)gridSize}, BLUE };
         buildings[5] = { "Blacksmith", {(float)(450), (float)((200)), (float)gridSize, (float)gridSize}, BROWN };
         buildings[6] = { "Church", {(float)(750), (float)((250)), (float)gridSize, (float)gridSize}, PURPLE };
-
-
+        buildings[7] = { "new", {(50), 200, (float)gridSize, (float)gridSize}, RED };
 
         population = Population(500, 70, 100);
         military = Military(200, 80, 100, 10, 1000, 50);
         leadership = Leadership();
 
         std::srand(std::time(nullptr));
+    }
+
+    // Update the destructor to clean up resources
+    ~RenderSystem() {
+        UnloadNewKingdomChiefTexture();
     }
     // notice board window
     void DrawSideWindow() {
@@ -1300,14 +2248,24 @@ public:
 
 
     }
+    void pixelbackground2() {
+        int sideWindowX = 0;
+        int sideWindowY = 0;
+        int chiefx = 50;
+        int chiefy = 0;
+        Image chiefimage = LoadImage("village5.PNG");
+        Texture2D chieftex = LoadTextureFromImage(chiefimage); // Convert image to texture
+        UnloadImage(chiefimage);  // We no longer need the image after converting it to a texture
+        DrawTexture(chieftex, chiefx, chiefy, WHITE);
+    }
 
     void castlemenue()
     {
         //Drwa Castle Menu
-        DrawText("Castle Menu", 20, 530, 20, RED);
-        DrawText("1. Soldiers Salaries (1 gold /1 soldier)", 20, 555, 20, BLACK);
-        DrawText("2. display leadership", 20, 580, 20, BLACK);
-        DrawText("3. Display King's Policies", 20, 605, 20, BLACK);
+        DrawText("Castle Menu", 20, 530, 20, GREEN);
+        DrawText("1. Soldiers Salaries (1 gold /1 soldier)", 20, 555, 20, GOLD);
+        DrawText("2. display leadership", 20, 580, 20, GOLD);
+        DrawText("3. Display King's Policies", 20, 605, 20, GOLD);
 
         if (IsKeyPressed(KEY_ONE))
         {
@@ -1326,9 +2284,10 @@ public:
                 kingdom.nobles.unrest -= 3;
             }
         }
+
         else if (IsKeyPressed(KEY_TWO))
         {
-            leadership.DisplayLeadership();
+            kingdom.events.add(leadership.DisplayLeadership());
 
         }
         else if (IsKeyPressed(KEY_THREE))
@@ -1339,15 +2298,14 @@ public:
 
 
     }
-
     void barrackmenue()
     {
         //Draw Barrack Menu
-        DrawText("Barrack Menu", 20, 530, 20, RED);
-        DrawText("1. Train Troops (10 gold / 10 soldiers)", 20, 555, 20, BLACK);
-        DrawText("2. Get Equipment (10 gold / 15 arrows)", 20, 580, 20, BLACK);
-        DrawText("3. Recruit soldier (10 gold / 10 soldiers)", 20, 605, 20, BLACK);
-        DrawText("4. Inventory Display ", 20, 625, 20, BLACK);
+        DrawText("Barrack Menu", 20, 530, 20, GREEN);
+        DrawText("1. Train Troops (10 gold / 10 soldiers)", 20, 555, 20, GOLD);
+        DrawText("2. Get Equipment (10 gold / 15 arrows)", 20, 580, 20, GOLD);
+        DrawText("3. Recruit soldier (10 gold / 10 soldiers)", 20, 605, 20, GOLD);
+        DrawText("4. Inventory Display ", 20, 625, 20, GOLD);
 
         if (IsKeyPressed(KEY_ONE))
         {
@@ -1363,10 +2321,6 @@ public:
             }
         }
 
-        //else if (IsKeyPressed(KEY_TWO))
-        //{
-        //    //BUY EQUIPMENT
-        //}
 
         else if (IsKeyPressed(KEY_THREE))
         {
@@ -1376,7 +2330,6 @@ public:
                 recruits = kingdom.peasants.population / 5;
                 military.soldiers += recruits;
                 kingdom.events.add(" Executed: soldiers added to Military.");
-               // cout << " Executed: " << recruits << " soldiers added to Military.\n";
             }
             else {
                 kingdom.events.add("Not enough population to recruit soldiers.");
@@ -1388,14 +2341,13 @@ public:
         }
 
     }
-
     void blacksmithmenue()
     {
         //Draw Blacksmith Menu
-        DrawText("Blacksmith Menu", 20, 530, 20, RED);
-        DrawText("1. Forge Swords (10 iron / 5 swords)", 20, 555, 20, BLACK);
-        DrawText("2. Forge Arrows (10 wood / 5 arrows)", 20, 580, 20, BLACK);
-        DrawText("3. Forge Armours (10 iron /  2 Armours)", 20, 605, 20, BLACK);
+        DrawText("Blacksmith Menu", 20, 530, 20, GREEN);
+        DrawText("1. Forge Swords (10 iron / 5 swords)", 20, 555, 20, GOLD);
+        DrawText("2. Forge Arrows (10 wood / 5 arrows)", 20, 580, 20, GOLD);
+        DrawText("3. Forge Armours (10 iron /  2 Armours)", 20, 605, 20, GOLD);
 
         if (IsKeyPressed(KEY_ONE))
         {
@@ -1436,14 +2388,13 @@ public:
 
 
     }
-
     void churchmenue()
     {
         //Draw Church Menu
-        DrawText("Church Menu", 20, 530, 20, RED);
-        DrawText("1. Noble Meeting (unrest -= 5)", 20, 555, 20, BLACK);
-        DrawText("2. War negotiations (morale += 10)", 20, 580, 20, BLACK);
-        DrawText("3. Worship (unrest -= 2 && morale += 5)", 20, 605, 20, BLACK);
+        DrawText("Church Menu", 20, 530, 20, GREEN);
+        DrawText("1. Noble Meeting (unrest -= 5)", 20, 555, 20, GOLD);
+        DrawText("2. War negotiations (morale += 10)", 20, 580, 20, GOLD);
+        DrawText("3. Worship (unrest -= 2 && morale += 5)", 20, 605, 20, GOLD);
 
         if (IsKeyPressed(KEY_ONE))
         {
@@ -1496,13 +2447,12 @@ public:
         }
 
     }
-
     void marketmenue() {
         // Draw Market Menu
-        DrawText("Market Menu", 20, 530, 20, RED);
-        DrawText("1. Buy Food (10 gold / 10 food)", 20, 555, 20, BLACK);
-        DrawText("2. Trade Wood for Food (10 wood / 10 food)", 20, 580, 20, BLACK);
-        DrawText("3. Trade Iron for Gold ", 20, 605, 20, BLACK);
+        DrawText("Market Menu", 20, 530, 20, GREEN);
+        DrawText("1. Buy Food (10 gold / 10 food)", 20, 555, 20, GOLD);
+        DrawText("2. Trade Wood for Food (10 wood / 10 food)", 20, 580, 20, GOLD);
+        DrawText("3. Trade Iron for Gold ", 20, 605, 20, GOLD);
 
         if (IsKeyPressed(KEY_ONE)) {
             if (kingdom.economy.gold >= 10) {
@@ -1559,6 +2509,8 @@ public:
 
 
     }
+
+
     void  Run() {
 
         int selectedOption = 0;
@@ -1571,13 +2523,25 @@ public:
             UpdateChiefMovement();
 
             BeginDrawing();
-            ClearBackground(SKYBLUE);
+            //ClearBackground(SKYBLUE);
             background();
-            DrawGrid();
+            //DrawGrid();
             pixelbackground();
+            //ClearBackground(BLACK);
+            //pixelbackground2();
             //DrawBuildings();
             //DrawChief2();
             pixelCheif();
+
+            kingdom.messageBoard->drawMessageBoard(780, 400, kingdom.leader.title + " " + kingdom.leader.name);
+            DrawMessageBoardOptions(790, 580);
+            kingdom.handleDiplomacy(newKingdom);
+            kingdom.handleTrade(kingdom, newKingdom);
+            HandleMessageBoardInput(kingdom, newKingdom);
+
+
+
+
             Drawdiscription();
             //DrawSideWindow();
 
@@ -1594,20 +2558,22 @@ public:
             // add then passing the string to the draw text function
 
             char msg[128];
+            DrawRectangle(10, 80, 470, 580, Fade(BLACK, 0.7f));
+            DrawRectangleLines(10, 80, 470, 580, GOLD);
 
-            DrawText("population:", 10, 50, 18, titleColor);
+            DrawText("population:", 20, 90, 18, titleColor);
 
             sprintf_s(msg, sizeof(msg), "Peasants: ");
-            _itoa_s(kingdom.peasants.population, msg + strlen(msg), sizeof(msg) - strlen(msg), 10); // Convert integer to string and append
-            DrawText(msg, 30, 70, 18, YELLOW);
+            _itoa_s(kingdom.peasants.population, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            DrawText(msg, 30, 110, 18, YELLOW);
 
             sprintf_s(msg, sizeof(msg), "Merchants: ");
-            _itoa_s(kingdom.merchants.population, msg + strlen(msg), sizeof(msg) - strlen(msg), 10); // Convert integer to string and append
-            DrawText(msg, 30, 90, 18, YELLOW);
+            _itoa_s(kingdom.merchants.population, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
+            DrawText(msg, 30, 130, 18, YELLOW);
 
             sprintf_s(msg, sizeof(msg), "nobles: ");
             _itoa_s(kingdom.nobles.population, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
-            DrawText(msg, 30, 110, 18, YELLOW);
+            DrawText(msg, 30, 150, 18, YELLOW);
 
             sprintf_s(msg, sizeof(msg), "unrest - Peasants: ");
             _itoa_s(static_cast<int>(kingdom.peasants.unrest), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
@@ -1616,72 +2582,80 @@ public:
             strcat_s(msg, sizeof(msg), "% ,Nobles: ");
             _itoa_s(static_cast<int>(kingdom.nobles.unrest), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
             strcat_s(msg, sizeof(msg), " % ");
-            DrawText(msg, 30, 130, 16, (kingdom.peasants.unrest > 50 || kingdom.merchants.unrest > 50 || kingdom.nobles.unrest > 50) ? RED : YELLOW);
+            DrawText(msg, 30, 170, 16, (kingdom.peasants.unrest > 50 || kingdom.merchants.unrest > 50 || kingdom.nobles.unrest > 50) ? RED : YELLOW);
 
-            DrawText("resource:", 10, 170, 18, titleColor);
+            DrawText("resource:", 20, 200, 18, titleColor);
 
             sprintf_s(msg, sizeof(msg), "food: ");
             _itoa_s(kingdom.resources.food, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
-            DrawText(msg, 30, 190, 18, (kingdom.resources.food < (kingdom.peasants.population + kingdom.merchants.population + kingdom.nobles.population)) ? RED : YELLOW);
+            DrawText(msg, 30, 220, 18, (kingdom.resources.food < (kingdom.peasants.population + kingdom.merchants.population + kingdom.nobles.population)) ? RED : YELLOW);
 
             sprintf_s(msg, sizeof(msg), "Wood: ");
             _itoa_s(kingdom.resources.wood, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
-            DrawText(msg, 150, 190, 18, (kingdom.resources.wood < (int)((kingdom.peasants.population + kingdom.merchants.population + kingdom.nobles.population) * 0.1f)) ? RED : YELLOW);
+            DrawText(msg, 140, 220, 18, (kingdom.resources.wood < (int)((kingdom.peasants.population + kingdom.merchants.population + kingdom.nobles.population) * 0.1f)) ? RED : YELLOW);
 
             sprintf_s(msg, sizeof(msg), "Stone: ");
             _itoa_s(kingdom.resources.stone, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
-            DrawText(msg, 270, 190, 18, YELLOW);
+            DrawText(msg, 250, 220, 18, YELLOW);
 
             sprintf_s(msg, sizeof(msg), "Iron: ");
             _itoa_s(kingdom.resources.iron, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
-            DrawText(msg, 390, 190, 18, (kingdom.resources.iron < kingdom.army.soldiers * 1) ? RED : YELLOW);
+            DrawText(msg, 360, 220, 18, (kingdom.resources.iron < kingdom.army.soldiers * 1) ? RED : YELLOW);
 
-            DrawText("eco::", 10, 230, 18, titleColor);
+            DrawText("eco::", 20, 250, 18, titleColor);
 
             sprintf_s(msg, sizeof(msg), "Gold: ");
             _itoa_s(static_cast<int>(kingdom.economy.gold), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
-            DrawText(msg, 30, 250, 18, (kingdom.economy.gold < 20.0f) ? RED : YELLOW);
+            DrawText(msg, 30, 270, 18, (kingdom.economy.gold < 20.0f) ? RED : YELLOW);
 
             sprintf_s(msg, sizeof(msg), "Debt: ");
             _itoa_s(static_cast<int>(kingdom.economy.debt), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
-            DrawText(msg, 150, 250, 18, (kingdom.economy.debt > 0.0f) ? RED : YELLOW);
+            DrawText(msg, 140, 270, 18, (kingdom.economy.debt > 0.0f) ? RED : YELLOW);
 
             sprintf_s(msg, sizeof(msg), "Tax Rate: ");
             _itoa_s(static_cast<int>(kingdom.economy.taxRate * 100), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
             strcat_s(msg, sizeof(msg), "%");
-            DrawText(msg, 30, 270, 18, YELLOW);
+            DrawText(msg, 30, 290, 18, YELLOW);
 
             sprintf_s(msg, sizeof(msg), "Inflation: ");
             _itoa_s(static_cast<int>(kingdom.economy.inflation * 100), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
             strcat_s(msg, sizeof(msg), "%");
-            DrawText(msg, 200, 270, 18, (kingdom.economy.inflation > 0.3f) ? RED : YELLOW);
+            DrawText(msg, 180, 290, 18, (kingdom.economy.inflation > 0.3f) ? RED : YELLOW);
 
             sprintf_s(msg, sizeof(msg), "corruption: ");
             _itoa_s(static_cast<int>(kingdom.economy.corruption * 100), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
             strcat_s(msg, sizeof(msg), "%");
-            DrawText(msg, 370, 270, 18, (kingdom.economy.corruption > 0.5f) ? RED : YELLOW);
+            DrawText(msg, 340, 290, 18, (kingdom.economy.corruption > 0.5f) ? RED : YELLOW);
 
-            DrawText("Military:", 10, 310, 18, titleColor);
+            DrawText("Military:", 20, 330, 18, titleColor);
 
             sprintf_s(msg, sizeof(msg), "Soldiers: ");
             _itoa_s(kingdom.army.soldiers, msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
-            DrawText(msg, 30, 330, 18, (kingdom.army.soldiers == 0) ? RED : YELLOW);
+            DrawText(msg, 30, 350, 18, (kingdom.army.soldiers == 0) ? RED : YELLOW);
 
             sprintf_s(msg, sizeof(msg), "training: ");
             _itoa_s(static_cast<int>(kingdom.army.training), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
             strcat_s(msg, sizeof(msg), "%");
-            DrawText(msg, 150, 330, 18, (kingdom.army.training < 30.0f) ? RED : YELLOW);
+            DrawText(msg, 140, 350, 18, (kingdom.army.training < 30.0f) ? RED : YELLOW);
 
             sprintf_s(msg, sizeof(msg), "Morale: ");
             _itoa_s(static_cast<int>(kingdom.army.morale), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
             strcat_s(msg, sizeof(msg), "%");
-            DrawText(msg, 300, 330, 18, (kingdom.army.morale > 50.0f) ? RED : YELLOW);
+            DrawText(msg, 270, 350, 18, (kingdom.army.morale < 50.0f) ? RED : YELLOW);
 
             sprintf_s(msg, sizeof(msg), "Army Corruption: ");
             _itoa_s(static_cast<int>(kingdom.army.corruption * 100), msg + strlen(msg), sizeof(msg) - strlen(msg), 10);
             strcat_s(msg, sizeof(msg), "%");
-            DrawText(msg, 30, 350, 18, (kingdom.army.corruption > 0.3f) ? RED : YELLOW);
+            DrawText(msg, 30, 370, 18, (kingdom.army.corruption > 0.3f) ? RED : YELLOW);
 
+            DrawText("Recent Events:", 20, 400, 18, titleColor);
+            int evCount = kingdom.events.count;
+            for (int i = 0; i < evCount; ++i) {
+                DrawText(kingdom.events.messages[i], 30, 420 + 20 * i, 16, statColor);
+            }
+            if (evCount == 0) {
+                DrawText("No events yet.", 30, 420, 16, statColor);
+            }
 
             // checking the collision of the charcter with tje buildings and displaying the menue
             if (CheckCollisionRecs(chiefPosition, buildings[0].rect)) {
@@ -1705,18 +2679,12 @@ public:
 
                 marketmenue();
             }
-            // displaying the event log 
+            if (CheckCollisionRecs(chiefPosition, buildings[7].rect)) {
 
-            DrawText("Recent Events:", 10, 390, 18, titleColor);
-            int evCount = kingdom.events.count;
-            for (int i = 0; i < evCount; ++i) {
-                DrawText(kingdom.events.messages[i], 30, 410 + 20 * i, 16, statColor);
-            }
-            if (evCount == 0) {
-                DrawText("No events yet.", 30, 410, 16, statColor);
+                newclan();
             }
 
-            DrawText("PRESS SPACE FOR NEXT DAY", 500, 670, 20, BLACK);
+            DrawText("PRESS SPACE FOR NEXT DAY", 20, 680, 15, RED);
 
 
 
@@ -1725,6 +2693,7 @@ public:
         }
         CloseWindow();
     }
+
 };
 
 
